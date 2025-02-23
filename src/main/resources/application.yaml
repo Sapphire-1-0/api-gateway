@@ -3,19 +3,3 @@ spring:
     name: api-gateway
   config:
     import: optional:configserver:http://localhost:7090
-  cloud:
-    gateway:
-      routes:
-        - id: member-management
-          uri: lb:http://MEMBER-MANAGEMENT
-          predicates:
-            - Path=/api/v1/member/**
-        - id: premium-billing
-          uri: lb:http://PREMIUM-BILLING
-          predicates:
-            - Path=/api/v1/premium-billing/**
-      discovery:
-        locator:
-          enabled: true
-server:
-  port: 7092

@@ -1,20 +1,21 @@
 package com.brihaspathee.sapphire.filter;
 
+import com.brihaspathee.sapphire.dto.auth.AuthorizationRequest;
 import com.brihaspathee.sapphire.dto.auth.UserDto;
 import com.brihaspathee.sapphire.web.response.SapphireAPIResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.core.Ordered;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -30,6 +31,7 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @Component
+@Order(-1)
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
     /**
@@ -81,9 +83,6 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     /**
      * Constructs an instance of the AuthenticationFilter and configures the WebClient.
-     *
-     * @param webClientBuilder the WebClient.Builder used to create a WebClient instance.
-     *                         It sets the base URL for the external authentication service.
      */
     public AuthenticationFilter(WebClient.Builder webClientBuilder) {
         super(Config.class);
@@ -119,6 +118,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
      *         If authentication fails, it sends an appropriate error response to the client.
      */
     private Mono<Void> authenticate(ServerWebExchange exchange, GatewayFilterChain chain) {
+        log.info("Authenticating request...");
         ServerHttpRequest request = exchange.getRequest();
         /*
             This will give the full url that the user tried to access
@@ -147,8 +147,14 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         log.info("Full URL: {}", fullURL);
         log.info("Path: {}", path);
         log.info("About to send to auth service...");
-        return webClient.get()
-                .uri("/public/validate?token=" + token)
+        AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
+                .resourceUri(path)
+                .build();
+        return webClient.post()
+                .uri("/resource/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
+                .body(BodyInserters.fromValue(authorizationRequest))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<SapphireAPIResponse<UserDto>>() {
                 })

@@ -134,4 +134,21 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "✅ Version update pushed successfully."
+# Login to git hub
+echo "$GH_PAT" | docker login ghcr.io -u vbalaji215-dev --password-stdin
+# Define variables to push image to docker hub
+IMAGE_NAME="api-gateway"
+CONTAINER_REPO="ghcr.io"
+CONTAINER_ORG="sapphire-1-0"
+TAG="latest"
+
+# Build the Docker image
+docker build -t ${IMAGE_NAME} .
+
+# Tag the image with the organization and repository
+docker tag ${IMAGE_NAME}:latest ${CONTAINER_REPO}/${CONTAINER_ORG}/${IMAGE_NAME}:${TAG}
+
+# Push the image to Docker Hub
+docker push ${CONTAINER_REPO}/${CONTAINER_ORG}/${IMAGE_NAME}:${TAG}
+echo "✅ Docker Image pushed successfully."
 echo "🎉 Deployment process completed!"

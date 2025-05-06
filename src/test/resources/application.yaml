@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    #    url: jdbc:postgresql://localhost:5432/artemis_gatewaydb
+    #    username: artemis_gateway_admin
+    #    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  cloud:
+    config:
+      enabled: false
+  profiles:
+    active: unit-test
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+application:
+  user-info:
+    username: X-USER-NAME
+    service-id: X-SERVICE-ID
+    account-type: X-ACCOUNT-TYPE

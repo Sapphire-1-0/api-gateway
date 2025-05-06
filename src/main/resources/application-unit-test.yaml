@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: api-gateway
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gatewaydb
+    username: gatewayadmin
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  cloud:
+    config:
+      enabled: false
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+application:
+  auth-service:
+    host: localhost
+    port: 7093
+  user-info:
+    user-id: X-USER-ID
+    username: X-USER-NAME
+    service-id: X-SERVICE-ID
+    account-type: X-ACCOUNT-TYPE

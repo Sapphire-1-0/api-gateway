@@ -68,6 +68,6 @@ public class Route {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @Column(name = "is_secured")
-    private Boolean isSecured;
+//    @Column(name = "is_secured")
+//    private Boolean isSecured;
 }

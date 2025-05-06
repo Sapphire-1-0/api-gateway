@@ -112,7 +112,7 @@ public class SapphireRouteDefinitionRepository implements RouteDefinitionReposit
 //            }
             routeDefinition.setFilters(filters);
         }
-        routeDefinition.setOrder((route.getIsSecured() ? -1 : 0));
+        // routeDefinition.setOrder((route.getIsSecured() ? -1 : 0));
         log.info("Route Definition: " + routeDefinition);
         return routeDefinition;
     }

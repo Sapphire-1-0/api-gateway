@@ -2,8 +2,8 @@ spring:
   application:
     name: api-gateway
   datasource:
-    url: jdbc:postgresql://localhost:5432/gatewaydb
-    username: gatewayadmin
+    url: jdbc:postgresql://localhost:5432/sapphire_gatewaydb
+    username: sapphire_gateway_admin
     password: password
     driver-class-name: org.postgresql.Driver
   jpa:

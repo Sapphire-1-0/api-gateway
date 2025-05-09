@@ -1,5 +1,6 @@
 package com.brihaspathee.sapphire.filter;
 
+import com.brihaspathee.sapphire.config.AuthServiceConfig;
 import com.brihaspathee.sapphire.dto.auth.AuthorizationRequest;
 import com.brihaspathee.sapphire.dto.auth.UserDto;
 import com.brihaspathee.sapphire.web.response.SapphireAPIResponse;
@@ -84,9 +85,14 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     /**
      * Constructs an instance of the AuthenticationFilter and configures the WebClient.
      */
-    public AuthenticationFilter(WebClient.Builder webClientBuilder) {
+    public AuthenticationFilter(WebClient.Builder webClientBuilder,
+                                AuthServiceConfig authServiceConfig) {
         super(Config.class);
-        this.webClient = webClientBuilder.baseUrl("http://localhost:7095/api/v1/sapphire/auth").build();
+        log.info("Auth Service Host: {}", authServiceConfig.getHost());
+        log.info("Auth Service Port: {}", authServiceConfig.getPort());
+        String authServiceUrl = "http://" + authServiceConfig.getHost() + ":" + authServiceConfig.getPort();
+        log.info("Auth Service URL: {}", authServiceUrl);
+        this.webClient = webClientBuilder.baseUrl(authServiceUrl + "/api/v1/sapphire/auth").build();
     }
 
     /**

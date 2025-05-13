@@ -33,7 +33,7 @@ INSERT INTO sapphire_gateway.routes (route_id, uri, predicates, filters, enabled
                                                                              ('premium-billing', 'lb:http://PREMIUM-BILLING', '/api/v1/sapphire/premium-billing/**', NULL, TRUE),
                                                                              ('auth-service', 'lb:http://AUTH-SERVICE', '/api/v1/sapphire/auth/**', NULL, TRUE),
                                                                              ('provider-management', 'lb:http://PROVIDER-MANAGEMENT', '/api/v1/sapphire/provider/private/**', 'AuthenticationFilter', TRUE),
-                                                                             ('provider-management-public', 'lb:http://PROVIDER-MANAGEMENT', '/api/v1/sapphire/provider/public/**', NULL, TRUE),
+                                                                             ('provider-management-public', 'lb:http://PROVIDER-MANAGEMENT', '/api/v1/sapphire/provider/public/**', NULL, TRUE);
 
 
 

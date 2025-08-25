@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created in Intellij IDEA
@@ -88,6 +89,8 @@ public class SapphireRouteDefinitionRepository implements RouteDefinitionReposit
         RouteDefinition routeDefinition = new RouteDefinition();
         routeDefinition.setId(route.getRouteId());
         routeDefinition.setUri(URI.create(route.getUri()));
+        routeDefinition.setOrder(route.getRouteOrder());
+        routeDefinition.setMetadata(Map.of("order", route.getRouteOrder()));
 
         // Add Predicates
         List<PredicateDefinition> predicates = new ArrayList<>();

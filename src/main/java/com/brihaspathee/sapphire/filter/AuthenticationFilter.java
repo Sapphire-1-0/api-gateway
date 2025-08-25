@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,9 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created in Intellij IDEA
@@ -125,6 +129,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
      */
     private Mono<Void> authenticate(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("Authenticating request...");
+        Map<String, String> pathVariables = exchange.getAttribute(
+                ServerWebExchangeUtils.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+
         ServerHttpRequest request = exchange.getRequest();
         /*
             This will give the full url that the user tried to access
@@ -142,7 +149,15 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             query will be - id=123&type=premium&status=active
          */
         String query = request.getURI().getQuery();
-
+        log.info("Path Variables: {}", pathVariables);
+        AtomicReference<String> reconstructedPath = new AtomicReference<>();
+        assert pathVariables != null;
+        pathVariables.forEach((key, value) -> {
+            log.info("Path Variable: {} -> {}", key, value);
+            reconstructedPath.set(path.replace(value, "{" + key + "}"));
+        });
+        String validationPath = reconstructedPath.get();
+        log.info("Validation Path: {}", validationPath);
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.info("No Authorization header found");
@@ -154,8 +169,13 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         log.info("Path: {}", path);
         log.info("About to send to auth service...");
         AuthorizationRequest authorizationRequest = AuthorizationRequest.builder()
-                .resourceUri(path)
+                .resourceUri(validationPath)
                 .build();
+        if(validationPath != null){
+            authorizationRequest.setResourceUri(validationPath);
+        }else{
+            authorizationRequest.setResourceUri(path);
+        }
         return webClient.post()
                 .uri("/resource/validate")
                 .contentType(MediaType.APPLICATION_JSON)

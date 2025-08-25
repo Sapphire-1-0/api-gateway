@@ -21,19 +21,21 @@ CREATE TABLE sapphire_gateway.routes (
                                 uri VARCHAR(255) NOT NULL,
                                 predicates TEXT NOT NULL,
                                 filters TEXT,
-                                enabled BOOLEAN DEFAULT TRUE
+                                enabled BOOLEAN DEFAULT TRUE,
+                                `order` INTEGER NOT NULL
 );
 
 
 -- Insert Sample Data
 
-INSERT INTO sapphire_gateway.routes (route_id, uri, predicates, filters, enabled) VALUES
-                                                                             ('member-management', 'lb:http://MEMBER-MANAGEMENT', '/api/v1/sapphire/mms/secured/member/**, /api/v1/sapphire/mms/secured/account/**', 'AuthenticationFilter', TRUE),
-                                                                             ('member-management-public', 'lb:http://MEMBER-MANAGEMENT', '/api/v1/sapphire/mms/public/**', NULL, TRUE),
-                                                                             ('premium-billing', 'lb:http://PREMIUM-BILLING', '/api/v1/sapphire/premium-billing/**', NULL, TRUE),
-                                                                             ('auth-service', 'lb:http://AUTH-SERVICE', '/api/v1/sapphire/auth/**', NULL, TRUE),
-                                                                             ('provider-management', 'lb:http://PROVIDER-MANAGEMENT', '/api/v1/sapphire/provider/private/**', 'AuthenticationFilter', TRUE),
-                                                                             ('provider-management-public', 'lb:http://PROVIDER-MANAGEMENT', '/api/v1/sapphire/provider/public/**', NULL, TRUE);
+INSERT INTO sapphire_gateway.routes (route_id, uri, predicates, filters, enabled, `order`) VALUES
+                                                                             ('member-management', 'lb:http://MEMBER-MANAGEMENT', '/api/v1/sapphire/mms/secured/member/**, /api/v1/sapphire/mms/secured/account/**', 'AuthenticationFilter', TRUE, 0),
+                                                                             ('member-management-public', 'lb:http://MEMBER-MANAGEMENT', '/api/v1/sapphire/mms/public/**', NULL, TRUE, 0),
+                                                                             ('premium-billing', 'lb:http://PREMIUM-BILLING', '/api/v1/sapphire/premium-billing/**', NULL, TRUE, 0),
+                                                                             ('auth-service', 'lb:http://AUTH-SERVICE', '/api/v1/sapphire/auth/**', NULL, TRUE, 0),
+                                                                             ('provider-management-get-org', 'lb:http://PROVIDER-MANAGEMENT', '/api/v1/sapphire/provider/private/organization/{organizationId}/**', 'AuthenticationFilter', TRUE, 5),
+                                                                             ('provider-management', 'lb:http://PROVIDER-MANAGEMENT', '/api/v1/sapphire/provider/private/**', 'AuthenticationFilter', TRUE, 10),
+                                                                             ('provider-management-public', 'lb:http://PROVIDER-MANAGEMENT', '/api/v1/sapphire/provider/public/**', NULL, TRUE, 0);
 
 
 

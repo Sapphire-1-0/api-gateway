@@ -68,6 +68,9 @@ public class Route {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @Column(name = "route_order", nullable = false)
+    private int routeOrder;
+
 //    @Column(name = "is_secured")
 //    private Boolean isSecured;
 }

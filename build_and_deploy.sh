@@ -1,4 +1,6 @@
 #!/bin/bash
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
+export PATH=$JAVA_HOME/bin:$PATH
 
 # Ensure scripts are executable
 chmod +x remove_snapshot.sh update_version.sh

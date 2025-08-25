@@ -13,7 +13,7 @@
     <version>1.0.2-SNAPSHOT</version>
     <name>api-gateway</name>
     <description>api-gateway</description>
-    <url/>
+    <url>http://github.com/Sapphire-1-0/api-gateway</url>
     <licenses>
         <license/>
     </licenses>
@@ -21,10 +21,11 @@
         <developer/>
     </developers>
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <connection>scm:git:git://github.com/Sapphire-1-0/api-gateway.git</connection>
+        <!--        <developerConnection>scm:git:ssh://github.com:Zeus-2-0/zeus-library.git</developerConnection>-->
+        <developerConnection>scm:git:git@github.com:Sapphire-1-0/api-gateway.git</developerConnection>
+        <url>scm:git:http://github.com/Sapphire-1-0/api-gateway</url>
+        <tag>api-gateway</tag>
     </scm>
     <properties>
         <java.version>21</java.version>
